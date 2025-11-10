@@ -899,6 +899,8 @@ where
         // they like, there's no guarantee that if addresses are
         // different, so are identities. So we check both
         if header.src == self.identity || header.src.addr() == self.identity.addr() {
+            #[cfg(feature = "tracing")]
+            tracing::trace!("Data from ourselves");
             return Err(Error::DataFromOurselves);
         }
 
