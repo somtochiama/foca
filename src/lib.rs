@@ -401,6 +401,16 @@ where
         mut runtime: impl Runtime<T>,
     ) -> Result<()> {
         for update in updates {
+            #[cfg(feature = "tracing")]
+            let addr_eq = self.identity.addr() == update.id().addr();
+            #[cfg(feature = "tracing")]
+            tracing::trace!(
+                self = tracing::field::debug(&self),
+                update = tracing::field::debug(&update),
+                addr_eq = addr_eq,
+                "addr_eq"
+            );
+
             if update.id() == &self.identity {
                 self.handle_self_update(update.incarnation(), update.state(), &mut runtime)?;
             } else if self.identity.addr() == update.id().addr() {
